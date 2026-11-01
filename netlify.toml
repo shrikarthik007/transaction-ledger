@@ -1,0 +1,30 @@
+# Netlify configuration for the Transaction Ledger frontend.
+# Docs: https://docs.netlify.com/build/configure-builds/file-based-configuration/
+
+[build]
+  # The React app lives in a subdirectory of this monorepo. A base directory
+  # declared here overrides whatever the Netlify UI has configured.
+  base = "frontend"
+  command = "npm run build"
+  # Relative to the base directory, i.e. frontend/dist
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# API proxy to the Render backend. The frontend calls a relative /api base
+# (see src/lib/api.ts), so Netlify rewrites those requests to Render.
+# This keeps the browser same-origin, which means no CORS configuration.
+# Enable once the Render service URL is known, and keep it ABOVE the SPA
+# fallback so it matches first.
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://<service>.onrender.com/api/:splat"
+#   status = 200
+#   force = true
+
+# SPA fallback: client-side routes (e.g. /accounts/:id) render the React app.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
